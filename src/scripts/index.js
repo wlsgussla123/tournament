@@ -1,26 +1,28 @@
 import Tournament from '~/scripts/Tournament'
 
-const containerElement = document.querySelector('#container')
-
 const options = {
 	rounds: 5,
 
 	image: {
-		width: 200,
-		height: 300,
+		width: 300,
+		height: 200,
 	},
 }
 
 const getCandidates = (size) => {
 	const result = []
 
+	const { width, height } = options.image
+	const pixelRatio = window.devicePixelRatio
+
 	for (let i = 0; i < size; i += 1) {
 		result.push({
 			id: i,
+			title: `candidate ${i}`,
 			image: {
-				url: `https://picsum.photos/${options.image.width}/${options.image.height}/?random`,
-				width: options.image.width,
-				height: options.image.height,
+				url: `https://picsum.photos/${Math.round(width * pixelRatio)}/${Math.round(height * pixelRatio)}/?image=${i}`,
+				width,
+				height,
 			},
 		})
 	}
@@ -29,9 +31,18 @@ const getCandidates = (size) => {
 }
 
 const init = () => {
+	const container = document.querySelector('#container')
+	const candidateTemplate = document.querySelector('#card')
+
+	window.c = candidateTemplate
+
 	const candidates = getCandidates(2 ** options.rounds)
 
-	const tournament = new Tournament(containerElement, candidates)
+	const tournament = new Tournament({
+		container,
+		playerTemplate: candidateTemplate,
+		players: candidates,
+	})
 
 	console.log(tournament)
 }
