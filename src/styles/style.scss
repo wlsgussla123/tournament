@@ -1,5 +1,13 @@
 @import './normalize';
 
-section {
-	color: blue;
+#match {
+	border-width: 1px;
+	border-style: solid;
+	border-color: blue;
+}
+
+.player {
+	border-width: 1px;
+	border-style: solid;
+	border-color: green;
 }
