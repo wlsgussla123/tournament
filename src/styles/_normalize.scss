@@ -1,3 +1,31 @@
 body {
-	margin: initial;
+	background-color: $white;
+
+	margin: unset;
+}
+
+figure {
+	margin: unset;
+}
+
+img {
+	background-color: $white;
+}
+
+a {
+	color: $primary;
+
+	&:focus,
+	&:hover {
+		color: lighten($primary, 20%);
+	}
+
+	&:active {
+		color: darken($primary, 10%);
+	}
+
+	transition-delay: 0ms;
+	transition-duration: 100ms;
+	transition-property: all;
+	transition-timing-function: ease-in-out;
 }

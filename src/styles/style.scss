@@ -1,13 +1,27 @@
+@import './variables';
 @import './normalize';
+@import './utils';
 
-#match {
-	border-width: 1px;
-	border-style: solid;
-	border-color: blue;
+#players {
+	display: flex;
+	justify-content: space-between;
 }
 
 .player {
-	border-width: 1px;
-	border-style: solid;
-	border-color: green;
+	// Unset `<a>`'s default styles
+	color: unset !important;
+	text-decoration: unset;
+
+	padding: 30px;
+
+	background-color: lighten($primary, 30%);
+
+	&:focus,
+	&:hover {
+		background-color: $primary;
+	}
+
+	&:active {
+		background-color: darken($primary, 10%);
+	}
 }

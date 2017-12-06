@@ -1,0 +1,11 @@
+.hidden {
+	display: none;
+}
+
+[t-container] {
+	width: $width;
+	margin-left: auto;
+	margin-right: auto;
+
+	text-align: center;
+}

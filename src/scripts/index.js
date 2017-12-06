@@ -32,6 +32,8 @@ const current = new Proxy({}, {
 				const img = elements.playerImgs[index]
 				const figcaption = elements.playerFigcaptions[index]
 
+				img.removeAttribute('src')
+
 				img.setAttribute('src', player.img.url)
 				img.setAttribute('width', player.img.width)
 				img.setAttribute('height', player.img.height)
@@ -51,7 +53,7 @@ const current = new Proxy({}, {
 			elements.title.textContent = title
 
 			// Toggle the back button
-			elements.backBtn.disabled = target.round === 0 && target.match === 0
+			elements.backBtn.classList.toggle('hidden', target.round === 0 && target.match === 0)
 		}
 
 		// Indicate success
@@ -120,10 +122,20 @@ const init = async () => {
 
 	// Bind events
 	elements.players.forEach((playerElement, index) => {
-		playerElement.addEventListener('click', event => advance(index))
+		playerElement.addEventListener('click', (event) => {
+			event.preventDefault()
+			event.currentTarget.blur()
+
+			advance(index)
+		})
 	})
 
-	elements.backBtn.addEventListener('click', event => goBack())
+	elements.backBtn.addEventListener('click', (event) => {
+		event.preventDefault()
+		event.currentTarget.blur()
+
+		goBack()
+	})
 
 	// Start the tournament
 	current.round = 0

@@ -5,30 +5,36 @@
 	</head>
 
 	<body>
-		<header>
+		<header id="header" t-container>
 			<h1>Tournament</h1>
 		</header>
 
-		<section id="container">
-			<button id="back-btn">Go Back</button>
-
+		<section id="container" t-container>
 			<main id="match">
 				<h2 id="match-title"></h2>
 
 				<div id="players">
-					<figure class="player">
-						<img>
+					<a class="player" href>
+						<figure>
+							<img>
 
-						<figcaption></figcaption>
-					</figure>
+							<figcaption></figcaption>
+						</figure>
+					</a>
 
-					<figure class="player">
-						<img>
+					<a class="player" href>
+						<figure>
+							<img>
 
-						<figcaption></figcaption>
-					</figure>
+							<figcaption></figcaption>
+						</figure>
+					</a>
 				</div>
 			</main>
+
+			<footer>
+				<a id="back-btn" href>Go Back and Choose Again</a>
+			</footer>
 		</section>
 	</body>
 </html>
