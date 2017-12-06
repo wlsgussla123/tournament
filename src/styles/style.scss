@@ -4,24 +4,14 @@
 
 #players {
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 }
 
 .player {
-	// Unset `<a>`'s default styles
-	color: unset !important;
-	text-decoration: unset;
+	display: inline-block;
 
+	margin: 20px;
 	padding: 30px;
 
 	background-color: lighten($primary, 30%);
-
-	&:focus,
-	&:hover {
-		background-color: $primary;
-	}
-
-	&:active {
-		background-color: darken($primary, 10%);
-	}
 }

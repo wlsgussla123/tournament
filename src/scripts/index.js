@@ -29,18 +29,16 @@ const current = new Proxy({}, {
 		if (property === 'match') {
 			// Update the players
 			receiver.players.forEach((player, index) => {
-				const img = elements.playerImgs[index]
-				const figcaption = elements.playerFigcaptions[index]
+				elements.players[index].setAttribute('title', `Choose ${player.title}`)
 
-				img.removeAttribute('src')
+				elements.playerImgs[index].removeAttribute('src')
 
-				img.setAttribute('src', player.img.url)
-				img.setAttribute('width', player.img.width)
-				img.setAttribute('height', player.img.height)
-				img.setAttribute('alt', `An image of ${player.title}`)
-				img.setAttribute('title', player.title)
+				elements.playerImgs[index].setAttribute('src', player.img.url)
+				elements.playerImgs[index].setAttribute('width', player.img.width)
+				elements.playerImgs[index].setAttribute('height', player.img.height)
+				elements.playerImgs[index].setAttribute('alt', `An image of ${player.title}`)
 
-				figcaption.textContent = player.title
+				elements.playerFigcaptions[index].textContent = player.title
 			})
 
 			// Update the title
@@ -61,6 +59,17 @@ const current = new Proxy({}, {
 	},
 })
 
+/**
+ * Expose the chart for debug.
+ * This code will be eliminated from production bundle.
+ */
+if (process.env.NODE_ENV === 'development') {
+	window.t = {
+		results,
+		current,
+	}
+}
+
 const changeMatch = (forward = true) => {
 	if (forward) {
 		if (current.match < (results[current.round].length / 2) - 1) {
@@ -79,6 +88,24 @@ const changeMatch = (forward = true) => {
 	}
 }
 
+const showChampion = (winner) => {
+	const championElement = document.querySelector('#champion-template').content.querySelector('.champion')
+
+	const imgElement = championElement.querySelector('img')
+	const figcaptionElement = championElement.querySelector('figcaption')
+
+	imgElement.setAttribute('src', winner.img.url)
+	imgElement.setAttribute('width', winner.img.width)
+	imgElement.setAttribute('height', winner.img.height)
+	imgElement.setAttribute('alt', `An image of ${winner.title}`)
+	imgElement.setAttribute('title', winner.title)
+
+	figcaptionElement.textContent = winner.title
+
+	elements.container.innerHTML = ''
+	elements.container.appendChild(championElement)
+}
+
 const advance = (index) => {
 	const winner = current.players[index]
 
@@ -87,6 +114,8 @@ const advance = (index) => {
 	// Champion
 	if (results[current.round].length === 2) {
 		console.log(winner)
+
+		showChampion(winner)
 
 		return
 	}
@@ -105,13 +134,12 @@ const goBack = () => {
 const init = async () => {
 	const entries = await model.getPlayers(2 ** options.rounds)
 
-	const containerElement = document.querySelector('#container')
-
-	elements.backBtn = containerElement.querySelector('#back-btn')
-	elements.title = containerElement.querySelector('#match-title')
-	elements.players = containerElement.querySelectorAll('.player')
-	elements.playerImgs = containerElement.querySelectorAll('.player img')
-	elements.playerFigcaptions = containerElement.querySelectorAll('.player figcaption')
+	elements.container = document.querySelector('#container')
+	elements.backBtn = elements.container.querySelector('#back-btn')
+	elements.title = elements.container.querySelector('#match-title')
+	elements.players = elements.container.querySelectorAll('.player')
+	elements.playerImgs = elements.container.querySelectorAll('.player img')
+	elements.playerFigcaptions = elements.container.querySelectorAll('.player figcaption')
 
 	// Prepare rounds and register players
 	for (let i = 0; i < options.rounds; i += 1) {

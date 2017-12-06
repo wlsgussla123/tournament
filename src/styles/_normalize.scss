@@ -14,6 +14,7 @@ img {
 
 a {
 	color: $primary;
+	text-decoration: underline;
 
 	&:focus,
 	&:hover {
@@ -24,8 +25,19 @@ a {
 		color: darken($primary, 10%);
 	}
 
-	transition-delay: 0ms;
-	transition-duration: 100ms;
-	transition-property: all;
-	transition-timing-function: ease-in-out;
+	&[t-link-bg] {
+		color: unset;
+		text-decoration: unset;
+
+		&:focus,
+		&:hover {
+			background-color: $primary;
+		}
+
+		&:active {
+			background-color: darken($primary, 10%);
+		}
+	}
+
+	transition: 100ms all ease-in-out;
 }
