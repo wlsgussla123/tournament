@@ -8,6 +8,10 @@
 
 Please read the [wiki].
 
+## Demo
+
+It's on the [GitHub Pages].
+
 ## Prerequisites
 
 * [Node.js 8+]
@@ -31,13 +35,12 @@ $ npm run dev
 # Test your app.
 $ npm test
 
-# Build for production.
+# Build for production and launch server.
 $ npm run build
-
-# Start production server.
 $ npx http-server -p 3000 ./dist
 ```
 
-[wiki]: https://github.com/chatii2412/scatter-chart/wiki
+[GitHub Pages]: https://chatii2412.github.io/tournament/
+[wiki]: https://github.com/chatii2412/tournament/wiki
 [Node.js 8+]: https://nodejs.org/
 [Google Chrome 62+]: https://google.com/chrome/
