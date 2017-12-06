@@ -1,6 +1,12 @@
+[![Build Status](https://travis-ci.org/chatii2412/tournament.svg?branch=master)](https://travis-ci.org/chatii2412/tournament)
+[![Known Vulnerabilities](https://snyk.io/test/github/chatii2412/tournament/badge.svg)](https://snyk.io/test/github/chatii2412/tournament)
+[![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/chatii2412/tournament)
+
 # tournament
 
-> Simple tournament.
+> Single-elimination tournament.
+
+Please read the [wiki].
 
 ## Prerequisites
 
@@ -32,5 +38,6 @@ $ npm run build
 $ npx http-server -p 3000 ./dist
 ```
 
+[wiki]: https://github.com/chatii2412/scatter-chart/wiki
 [Node.js 8+]: https://nodejs.org/
 [Google Chrome 62+]: https://google.com/chrome/
