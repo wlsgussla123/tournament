@@ -4,21 +4,42 @@ const options = process.env.CONFIG
 
 const elements = {}
 
-// A store contains every match results
-const results = []
-
-// Current match's information
-const current = new Proxy({}, {
+/**
+ * Data of the tournament and current match.
+ * The view will be updated automatically when its `match` property is changed. (one-way binding)
+ *
+ * @property {player[][]} results          - Every winners of each matches.
+ * @property {number}     round            - Current round. (start at 0)
+ * @property {number}     match            - Current match of the round. (start at 0)
+ * @property {player[]}   players          - (getter) Current 2 players.
+ * @property {number}     competitorsCount - (getter) Competitors of current round.
+ */
+const data = new Proxy({
+	results: [],
+	round: undefined,
+	match: undefined,
+}, {
 	get: (target, property, receiver) => {
-		if (property === 'players') {
-			return [
-				results[target.round][(target.match * 2) + 0],
-				results[target.round][(target.match * 2) + 1],
-			]
+		let result
+
+		switch (property) {
+			case 'players':
+				result = [
+					target.results[target.round][(target.match * 2) + 0],
+					target.results[target.round][(target.match * 2) + 1],
+				]
+
+				break
+			case 'competitorsCount':
+				result = target.results[target.round].length
+
+				break
+			default:
+				// The default behavior
+				result = target[property]
 		}
 
-		// The default behavior
-		return target[property]
+		return result
 	},
 
 	set: (target, property, value, receiver) => {
@@ -27,28 +48,26 @@ const current = new Proxy({}, {
 
 		// Update the view
 		if (property === 'match') {
+			// Update the title
+			const title = receiver.competitorsCount === 2 ?
+				'Final' :
+				`Round of ${receiver.competitorsCount}, Match ${target.match + 1}`
+
+			elements.title.textContent = title
+
 			// Update the players
 			receiver.players.forEach((player, index) => {
-				elements.players[index].setAttribute('title', `Choose ${player.title}`)
+				elements.players[index].setAttribute('title', `Choose ${player.name}`)
 
-				elements.playerImgs[index].removeAttribute('src')
+				elements.playerImgs[index].removeAttribute('src') // TODO: Improve UX
 
 				elements.playerImgs[index].setAttribute('src', player.img.url)
 				elements.playerImgs[index].setAttribute('width', player.img.width)
 				elements.playerImgs[index].setAttribute('height', player.img.height)
-				elements.playerImgs[index].setAttribute('alt', `An image of ${player.title}`)
+				elements.playerImgs[index].setAttribute('alt', `An image of ${player.name}`)
 
-				elements.playerFigcaptions[index].textContent = player.title
+				elements.playerFigcaptions[index].textContent = player.name
 			})
-
-			// Update the title
-			const playersLength = results[target.round].length
-
-			const title = playersLength === 2 ?
-				'Final' :
-				`Round of ${playersLength}, Match ${target.match + 1}`
-
-			elements.title.textContent = title
 
 			// Toggle the back button
 			elements.backBtn.classList.toggle('hidden', target.round === 0 && target.match === 0)
@@ -60,79 +79,100 @@ const current = new Proxy({}, {
 })
 
 /**
- * Expose the chart for debug.
- * This code will be eliminated from production bundle.
+ * Expose some variables for debug.
+ * This block will be eliminated from production bundle.
  */
 if (process.env.NODE_ENV === 'development') {
 	window.t = {
-		results,
-		current,
+		data,
 	}
 }
 
-const changeMatch = (forward = true) => {
-	if (forward) {
-		if (current.match < (results[current.round].length / 2) - 1) {
-			current.match += 1
+/**
+ * Load the next or the previous match.
+ *
+ * @param {object}  options
+ * @param {boolean} options.prev - Load previous match if truthy,
+ *                                 load next match if falsy.
+ */
+const loadMatch = ({ prev = false } = {}) => {
+	if (!prev) {
+		if (data.match < (data.competitorsCount / 2) - 1) {
+			data.match += 1
 		} else {
-			current.round += 1
-			current.match = 0
+			data.round += 1
+			data.match = 0
 		}
 	} else {
-		if (current.match > 0) { // eslint-disable-line no-lonely-if
-			current.match -= 1
+		if (data.match > 0) { // eslint-disable-line no-lonely-if
+			data.match -= 1
 		} else {
-			current.round -= 1
-			current.match = (results[current.round].length / 2) - 1
+			data.round -= 1
+			data.match = (data.competitorsCount / 2) - 1
 		}
 	}
 }
 
-const showChampion = (winner) => {
+/**
+ * Show the champion.
+ *
+ * @param {player} champion - The champion.
+ */
+const showChampion = (champion) => {
+	console.log(champion)
+
 	const championElement = document.querySelector('#champion-template').content.children[0]
 
 	const imgElement = championElement.querySelector('img')
 	const figcaptionElement = championElement.querySelector('figcaption')
 
-	imgElement.setAttribute('src', winner.img.url)
-	imgElement.setAttribute('width', winner.img.width)
-	imgElement.setAttribute('height', winner.img.height)
-	imgElement.setAttribute('alt', `An image of ${winner.title}`)
-	imgElement.setAttribute('title', winner.title)
+	imgElement.setAttribute('src', champion.img.url)
+	imgElement.setAttribute('width', champion.img.width)
+	imgElement.setAttribute('height', champion.img.height)
+	imgElement.setAttribute('alt', `An image of ${champion.name}`)
+	imgElement.setAttribute('title', champion.name)
 
-	figcaptionElement.textContent = winner.title
+	figcaptionElement.textContent = champion.name
 
 	elements.container.innerHTML = ''
 	elements.container.appendChild(championElement)
 }
 
-const advance = (index) => {
-	const winner = current.players[index]
-
-	const { round, match } = current
+/**
+ * Advance the winner to the next round and load the next match.
+ *
+ * @param {player} winner - The winner of current match.
+ */
+const advance = (winner) => {
+	const { round, match, competitorsCount } = data
 
 	// Champion
-	if (results[round].length === 2) {
-		console.log(winner)
-
+	if (competitorsCount === 2) {
 		showChampion(winner)
 
 		return
 	}
 
-	results[round + 1][match] = winner
+	data.results[round + 1][match] = winner
 
-	changeMatch()
+	loadMatch()
 }
 
+/**
+ * Go back and load the previous match.
+ */
 const goBack = () => {
 	// TODO: Remove the last winner from `results`
 
-	changeMatch(false)
+	loadMatch({ prev: true })
 }
 
+/**
+ * Initiate the tournament.
+ */
 const init = async () => {
-	const entries = await model.getPlayers(2 ** options.rounds)
+	// Get the entry from API.
+	const entry = await model.getEntry(options.entrySize)
 
 	elements.container = document.querySelector('#container')
 
@@ -144,12 +184,12 @@ const init = async () => {
 	elements.playerImgs = matchElement.querySelectorAll('.player img')
 	elements.playerFigcaptions = matchElement.querySelectorAll('.player figcaption')
 
-	// Prepare rounds and register players
-	for (let i = 0; i < options.rounds; i += 1) {
-		results.push([])
+	// Prepare rounds and register the players
+	for (let i = options.entrySize; i > 1; i /= 2) {
+		data.results.push([])
 	}
 
-	results[0].push(...entries)
+	data.results[0].push(...entry)
 
 	// Bind events
 	elements.players.forEach((playerElement, index) => {
@@ -157,7 +197,7 @@ const init = async () => {
 			event.preventDefault()
 			event.currentTarget.blur()
 
-			advance(index)
+			advance(data.players[index])
 		})
 	})
 
@@ -169,8 +209,8 @@ const init = async () => {
 	})
 
 	// Start the tournament
-	current.round = 0
-	current.match = 0
+	data.round = 0
+	data.match = 0
 
 	elements.container.innerHTML = ''
 	elements.container.appendChild(matchElement)

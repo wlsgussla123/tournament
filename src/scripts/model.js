@@ -1,6 +1,26 @@
 const options = process.env.CONFIG
 
-const getPlayers = (size) => {
+/**
+ * A player of the tournament.
+ *
+ * @typedef  {Object} player     - A player.
+ *
+ * @property {number} id         - Player's identifier.
+ * @property {string} name       - Player's name.
+ * @property {Object} img        - Player's image.
+ * @property {string} img.url    - Url of the image.
+ * @property {number} img.width  - Width of the image. (in pixel)
+ * @property {number} img.height - Height of the image. (in pixel)
+ */
+
+/**
+ * Mock API that returns the entry.
+ *
+ * @param   {number}   size - Entry size.
+ *
+ * @returns {player[]}      - The entry.
+ */
+const getEntry = (size) => {
 	const result = []
 
 	const { width, height } = options.img
@@ -11,7 +31,7 @@ const getPlayers = (size) => {
 
 		result.push({
 			id,
-			title: `player ${id}`,
+			name: `Player ${id}`,
 			img: {
 				url: `https://picsum.photos/${Math.round(width * pixelRatio)}/${Math.round(height * pixelRatio)}/?image=${id}`,
 				width,
@@ -23,4 +43,4 @@ const getPlayers = (size) => {
 	return result
 }
 
-export default { getPlayers }
+export default { getEntry }

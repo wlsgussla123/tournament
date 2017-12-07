@@ -103,14 +103,6 @@ const cfg = {
 
 		extractSass,
 
-		new webpack.BannerPlugin({
-			banner: `
-${pkg.name} v${pkg.version}
-author : ${pkg.author}
-license: ${pkg.license}
-			`.trim(),
-		}),
-
 		// Optimizing
 		new webpack.optimize.ModuleConcatenationPlugin(),
 		new BundleAnalyzerPlugin({
@@ -128,9 +120,24 @@ license: ${pkg.license}
 }
 
 if (!isDev) {
-	cfg.plugins.push(new BabelMinifyPlugin({
-		removeConsole: true,
-	}))
+	const plugins = [
+		new BabelMinifyPlugin({
+			removeConsole: true,
+			removeDebugger: true,
+		}),
+
+		new webpack.BannerPlugin({
+			banner: `
+
+${pkg.name} v${pkg.version}
+author : ${pkg.author}
+license: ${pkg.license}
+
+			`.trim(),
+		}),
+	]
+
+	cfg.plugins.push(...plugins)
 }
 
 module.exports = cfg

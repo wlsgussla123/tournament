@@ -6,7 +6,7 @@ module.exports = {
 	},
 
 	client: {
-		rounds: 4,
+		entrySize: 32,
 
 		img: {
 			width: 400,
