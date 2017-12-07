@@ -1,0 +1,7 @@
+/*!
+ * tournament v0.2.0
+ * author : Wooram Jun <chatii2412@gmail.com>
+ * license: MIT
+ */
+body{background-color:#fff}body,figure{margin:unset}img{background-color:#fff}a{color:#409eff;text-decoration:underline;transition:all .1s ease-in-out}a:focus,a:hover{color:#a6d2ff}a:active{color:#0d84ff}a[t-link-bg]{color:unset;text-decoration:unset}a[t-link-bg]:focus,a[t-link-bg]:hover{background-color:#409eff}a[t-link-bg]:active{background-color:#0d84ff}.hidden{display:none}[t-container]{width:980px;margin-left:auto;margin-right:auto;overflow:hidden;text-align:center}#players{display:flex;justify-content:center}.player{display:inline-block;margin:20px;padding:30px;background-color:#d9ecff}
+/*# sourceMappingURL=main.51aabd0be118047a7e8992669695e846.css.map*/
