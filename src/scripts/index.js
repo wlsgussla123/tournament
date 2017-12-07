@@ -89,7 +89,7 @@ const changeMatch = (forward = true) => {
 }
 
 const showChampion = (winner) => {
-	const championElement = document.querySelector('#champion-template').content.querySelector('.champion')
+	const championElement = document.querySelector('#champion-template').content.children[0]
 
 	const imgElement = championElement.querySelector('img')
 	const figcaptionElement = championElement.querySelector('figcaption')
@@ -112,7 +112,7 @@ const advance = (index) => {
 	const { round, match } = current
 
 	// Champion
-	if (results[current.round].length === 2) {
+	if (results[round].length === 2) {
 		console.log(winner)
 
 		showChampion(winner)
@@ -126,7 +126,7 @@ const advance = (index) => {
 }
 
 const goBack = () => {
-	// TODO: Remove last winner from `results`
+	// TODO: Remove the last winner from `results`
 
 	changeMatch(false)
 }
@@ -135,11 +135,14 @@ const init = async () => {
 	const entries = await model.getPlayers(2 ** options.rounds)
 
 	elements.container = document.querySelector('#container')
-	elements.backBtn = elements.container.querySelector('#back-btn')
-	elements.title = elements.container.querySelector('#match-title')
-	elements.players = elements.container.querySelectorAll('.player')
-	elements.playerImgs = elements.container.querySelectorAll('.player img')
-	elements.playerFigcaptions = elements.container.querySelectorAll('.player figcaption')
+
+	const matchElement = document.querySelector('#match-template').content.children[0]
+
+	elements.backBtn = matchElement.querySelector('#back-btn')
+	elements.title = matchElement.querySelector('#match-title')
+	elements.players = matchElement.querySelectorAll('.player')
+	elements.playerImgs = matchElement.querySelectorAll('.player img')
+	elements.playerFigcaptions = matchElement.querySelectorAll('.player figcaption')
 
 	// Prepare rounds and register players
 	for (let i = 0; i < options.rounds; i += 1) {
@@ -168,6 +171,9 @@ const init = async () => {
 	// Start the tournament
 	current.round = 0
 	current.match = 0
+
+	elements.container.innerHTML = ''
+	elements.container.appendChild(matchElement)
 }
 
 window.addEventListener('load', () => init())
