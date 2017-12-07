@@ -15,7 +15,12 @@ It's on the [GitHub Pages].
 ## Prerequisites
 
 * [Node.js 8+]
+
+## Browser Compatibility
+
 * [Google Chrome 62+]
+* [Firefox 57+] (unofficial)
+* [Microsoft Edge 16+] (unofficial)
 
 ## Quick Start
 
@@ -44,3 +49,5 @@ $ npx http-server -p 3000 ./dist
 [wiki]: https://github.com/chatii2412/tournament/wiki
 [Node.js 8+]: https://nodejs.org/
 [Google Chrome 62+]: https://google.com/chrome/
+[Firefox 57+]: https://www.mozilla.org/firefox/
+[Microsoft Edge 16+]: https://www.microsoft.com/windows/microsoft-edge
